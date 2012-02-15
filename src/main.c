@@ -20,14 +20,14 @@ struct option longopts[] = {
 int commandOnly = TRUE;
 
 void version() {
-    printf("strfind v.9\n");
+    printf("efind v.9\n");
 }
 
 void usage(int retval) {
 
     version();
     printf("Usage:\n");
-    printf("strfind [path] [expression]\n");
+    printf("efind [path] [expression]\n");
     printf("\t-c\toutput find command only (do not run find)\n");
     exit(retval);
 
