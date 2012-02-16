@@ -24,33 +24,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%include {
+// this is the main parse function which takes a buffer and scans and parses
+// it using the re2c generated lexer and the lemon generated parser
 
-	#include <stdio.h>
-	#include <stdlib.h>
-        #include <assert.h>
-	#include "scanner.h"
-        #include "efind_parser.h"
-        #include "parse_expr.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include "scanner.h"
+#include "efind_parser.h"
+#include "parse_expr.h"
+
+void parse_expr(char *s) {
+
+    scanner_token token;
+    scanner_state state;
+
+    int stat;
+
+    void *pParser = ParseAlloc(malloc);
+
+    state.start = s;
+
+    printf("parse_expr: %s", s);
+    while(0 <= (stat = scan(&state,&token))) {
+        printf("token: %s\n", state.start);
+        Parse(pParser, token.tokType, &token);
+        state.end = state.start;
+    }
+
+    Parse(pParser,0,0);
+
 }
 
-%token_type {scanner_token*}
-%default_type {scanner_token*}
-%type expr {scanner_token*}
-%type TOKEN_INTEGER {scanner_token*}
-%left TOKEN_ADD TOKEN_SUB.
-%left TOKEN_MUL TOKEN_DIV.
-%syntax_error {printf("syntax error\n");}
-
-in ::= expr(A). {printf("in expr(A):\n");}
-expr(A) ::= expr(B) TOKEN_ADD expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n + C->data.n;}
-expr(A) ::= expr(B) TOKEN_SUB expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n - C->data.n;}
-expr(A) ::= expr(B) TOKEN_MUL expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n * C->data.n;}
-expr(A) ::= expr(B) TOKEN_DIV expr(C). {/* TODO: fix division by 0 */
-        //A->data.n = B->data.n / C->data.n;
-        printf("expr(A) expr(B) expr(C)\n");
-        }
-expr(A) ::= TOKEN_INTEGER(B). {
-printf("expr(A) expr(B)\n");
-//A->data.n = B->data.n;
-}

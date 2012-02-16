@@ -1,0 +1,15 @@
+efind
+Shannon Weyrick <weyrick@mozek.us>
+
+-----
+
+Lemon Parser Generator:
+http://www.hwaci.com/sw/lemon/
+
+re2c:
+http://re2c.org/
+
+Some examples for their use came from:
+http://freecode.com/articles/lemon-parser-generator-tutorial
+http://fasterparser.blogspot.com/2010/11/re2c-lexer-lemon-parser-calculator.html
+

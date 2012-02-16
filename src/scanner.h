@@ -24,33 +24,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%include {
+#ifndef SCANNER_H
+#define SCANNER_H
 
-	#include <stdio.h>
-	#include <stdlib.h>
-        #include <assert.h>
-	#include "scanner.h"
-        #include "efind_parser.h"
-        #include "parse_expr.h"
-}
+#define SCANNER_RETCODE_EOF -1
+#define SCANNER_RETCODE_ERR -2
+#define SCANNER_RETCODE_IMPOSSIBLE -3
 
-%token_type {scanner_token*}
-%default_type {scanner_token*}
-%type expr {scanner_token*}
-%type TOKEN_INTEGER {scanner_token*}
-%left TOKEN_ADD TOKEN_SUB.
-%left TOKEN_MUL TOKEN_DIV.
-%syntax_error {printf("syntax error\n");}
+// token definitions
+#include "efind_parser.h"
 
-in ::= expr(A). {printf("in expr(A):\n");}
-expr(A) ::= expr(B) TOKEN_ADD expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n + C->data.n;}
-expr(A) ::= expr(B) TOKEN_SUB expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n - C->data.n;}
-expr(A) ::= expr(B) TOKEN_MUL expr(C). { printf("expr(A) expr(B) expr(C)\n"); } //A->data.n = B->data.n * C->data.n;}
-expr(A) ::= expr(B) TOKEN_DIV expr(C). {/* TODO: fix division by 0 */
-        //A->data.n = B->data.n / C->data.n;
-        printf("expr(A) expr(B) expr(C)\n");
-        }
-expr(A) ::= TOKEN_INTEGER(B). {
-printf("expr(A) expr(B)\n");
-//A->data.n = B->data.n;
-}
+typedef struct _scanner_state {
+        char *start;
+        char *end;
+} scanner_state;
+
+typedef struct _scanner_token {
+
+        int tokType;
+	union {
+		int n;
+                char *str;
+	} data;
+	
+} scanner_token;
+
+int scan(scanner_state *state, scanner_token *token);
+
+#endif
