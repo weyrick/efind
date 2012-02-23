@@ -35,6 +35,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "efind_parser.h"
 #include "parse_expr.h"
 
+void *ParseAlloc(void *(*mallocProc)(size_t));
+void Parse(
+  void *yyp,                  /* The parser */
+  int yymajor,                /* The major token code number */
+  scanner_token *yyminor       /* The value for the token */
+);
+
 void parse_expr(char *s) {
 
     scanner_token token;
@@ -42,13 +49,13 @@ void parse_expr(char *s) {
 
     int stat;
 
-    void *pParser = ParseAlloc(malloc);
+    void *pParser = (void*)ParseAlloc(malloc);
 
     state.start = s;
 
-    printf("parse_expr: %s", s);
+    printf("parse_expr: [%s]\n", s);
     while(0 <= (stat = scan(&state,&token))) {
-        printf("token: %s\n", state.start);
+        printf("token: [%i]\n", token.tokType);
         Parse(pParser, token.tokType, &token);
         state.end = state.start;
     }

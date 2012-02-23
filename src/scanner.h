@@ -31,21 +31,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define SCANNER_RETCODE_ERR -2
 #define SCANNER_RETCODE_IMPOSSIBLE -3
 
-// token definitions
+// token definitions, generated from lemon
 #include "efind_parser.h"
 
 typedef struct _scanner_state {
-        char *start;
-        char *end;
+
+    char *start;
+    char *end;
+    char *ptr;
+
 } scanner_state;
 
 typedef struct _scanner_token {
 
-        int tokType;
-	union {
-		int n;
-                char *str;
-	} data;
+    int tokType;
+    char *data;
 	
 } scanner_token;
 

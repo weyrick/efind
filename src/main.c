@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "parse_expr.h"
 
@@ -56,7 +57,7 @@ void usage(int retval) {
 
 }
 
-runFind(char *argVec[])
+void runFind(char *argVec[])
 {
 
     char *findPath = "/usr/bin/find";
@@ -114,7 +115,8 @@ int main(int argc, char *argv[]) {
     //char **argVec = parseCommandline();
     //runFind(argVec);
 
-    parseExpression(argv[1]);
+    printf("path expr: %s", argv[1]);
+    parseExpression(argv[2]);
 
     return 0;
 

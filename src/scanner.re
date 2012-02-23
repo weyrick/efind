@@ -43,55 +43,39 @@ int scan(scanner_state *s, scanner_token *token) {
 #define YYCTYPE char
 #define YYCURSOR (s->start)
 #define YYLIMIT (s->end)
+#define YYMARKER (s->ptr)
+#define YYDEBUG(s, c) printf("state: %d char: %c\n", s, c)
 
 	while(SCANNER_RETCODE_IMPOSSIBLE == r) {
 	
 		/*!re2c
 		re2c:indent:top = 2;
 		re2c:yyfill:enable = 0;
-		
-		INTEGER = [0-9]+;
-		INTEGER {
-		
-			char *num;
-			int n;
-			num = strndup(q,YYCURSOR - q);
-			n = atoi(num);
 
-			DEBUG(printf("scanner num: '%s', YYCURSOR: '%s' YYLIMIT: '%s' q: '%s'\n",num,YYCURSOR,YYLIMIT,q));
-			free(num);
-			q = YYCURSOR;
-			// DEBUG(printf("integer, cursor: %s, number len: %ld, number: %d\n",YYCURSOR,YYCURSOR-s->start,n));
-			token->data.n = n;
-                        token->tokType = TOKEN_INTEGER;
-			
-			return 0;
-		}
+                space = [ \t]+;
+                word = [a-zA-Z0-9]+;
 
-		"+" {
-                        token->tokType = TOKEN_ADD;
-			return 0;
-		}
+                "owned by" {
+                    token->tokType = TOKEN_OWNEDBY;
+                    return 0;
+                }
 
-		"-" {
-                        token->tokType = TOKEN_SUB;
-			return 0;
-		}
+                space {
+                    token->tokType = TOKEN_WS;
+                    return 0;
+                }
 
-		"*" {
-                        token->tokType = TOKEN_MUL;
-			return 0;
-		}
-
-		"/" {
-                        token->tokType = TOKEN_DIV;
-			return 0;
-		}
+                word {
+                    token->tokType = TOKEN_WORD;
+                    token->data = strndup(q, YYCURSOR - q);
+                    return 0;
+                }
 		
 		"\000" { r = SCANNER_RETCODE_EOF; break; }
 
 		[^] { r = SCANNER_RETCODE_ERR; break; }
 		*/
+
 	}
 	return r;
 }
