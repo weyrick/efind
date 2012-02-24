@@ -24,34 +24,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%include {
+#ifndef LIST_H
+#define LIST_H
 
-	#include <stdio.h>
-	#include <stdlib.h>
-        #include <assert.h>
-        #include <string.h>
-        #include "list.h"
-	#include "scanner.h"
-        #include "efind_parser.h"
-        #include "parse_expr.h"
+// simple linked list that holds string data
+typedef struct list {
+    char *data;
+    struct list *next;
+} list;
 
-}
+// allocate a new list head
+list *list_create(void);
 
-%token_prefix TOKEN_
-%token_type {scanner_token*}
-%default_type {scanner_token*}
-%type expr {scanner_token*}
-%syntax_error {
-    printf("syntax error at: %s\n", TOKEN->data);
-    exit(1);
-}
-%extra_argument {list* argList}
+// push data onto the end of the given list
+// the list becomes the owner of the data, and frees
+// it in list_free
+void list_push(list *l, char *data);
 
-%type goal {int}
-goal ::= expr.
+// combine all nodes into a single string
+// caller becomes owner of the string
+char *list_to_string(list *l);
 
-expr ::= OWNEDBY WS WORD(B). {
-    list_push(argList, strdup("-user"));
-    list_push(argList, B->data);
-}
+// convert the data from all nodes into a char *[]
+// terminates with a null entry
+// data is shared with the array (not copied)
+char **list_to_array(list *l);
 
+// free the list and all data it owns
+void list_free(list* l);
+
+#endif

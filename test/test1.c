@@ -24,34 +24,59 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-%include {
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "parse_expr.h"
 
-	#include <stdio.h>
-	#include <stdlib.h>
-        #include <assert.h>
-        #include <string.h>
-        #include "list.h"
-	#include "scanner.h"
-        #include "efind_parser.h"
-        #include "parse_expr.h"
+typedef struct {
+    char *expr;
+    char *expect;
+} test;
+
+test testList[] = {
+// expr, expected find commands
+{"owned by weyrick", ". -user weyrick"},
+//
+{0,0}
+};
+
+// return 0 on pass, non-0 on fail
+int runTest(char *expr, char *expect) {
+
+    list *argList = parse_expr(".", expr);
+    char *result = list_to_string(argList);
+    int cmp = strcmp(result, expect);
+    if (cmp)
+        printf("FAIL: [%s] != [%s]\n", result, expect);
+
+    list_free(argList);
+    free(result);
+
+    return cmp;
+}
+
+int main(int argc, char *argv[]) {
+
+    printf("efind test suite\n");
+
+    int i, fail, pass;
+    i = pass = fail = 0;
+    while (testList[i].expr) {
+        if (runTest(testList[i].expr, testList[i].expect))
+            fail++;
+        else
+            pass++;
+        i++;
+    }
+
+    printf("%i pass, %i fail\n", pass, fail);
+
+    if (fail)
+        return 1;
+    else
+        return 0;
 
 }
 
-%token_prefix TOKEN_
-%token_type {scanner_token*}
-%default_type {scanner_token*}
-%type expr {scanner_token*}
-%syntax_error {
-    printf("syntax error at: %s\n", TOKEN->data);
-    exit(1);
-}
-%extra_argument {list* argList}
-
-%type goal {int}
-goal ::= expr.
-
-expr ::= OWNEDBY WS WORD(B). {
-    list_push(argList, strdup("-user"));
-    list_push(argList, B->data);
-}
 

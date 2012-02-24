@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef PARSE_EXPR_H
 #define PARSE_EXPR_H
 
-void parse_expr(char *s);
+#include "list.h"
+list * parse_expr(char *path, char *expr);
 
 #endif

@@ -45,6 +45,7 @@ typedef struct _scanner_state {
 typedef struct _scanner_token {
 
     int tokType;
+    // data will be owned by argList
     char *data;
 	
 } scanner_token;

@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "parse_expr.h"
 
+#define FIND_PATH "/usr/bin/find"
 #define FALSE 0
 #define TRUE  1
 
@@ -60,31 +61,34 @@ void usage(int retval) {
 void runFind(char *argVec[])
 {
 
-    char *findPath = "/usr/bin/find";
+    char *findPath = FIND_PATH;
 
     execve(findPath, argVec, NULL);
     perror("execve failed");
 
 }
 
-void parseExpression(char *exp) {
+char **parseExpression(char *path, char *expr) {
 
-    parse_expr(exp);
+    list *argList = parse_expr(path, expr);
 
-}
+    if (commandOnly) {
+        char *result = list_to_string(argList);
+        printf("%s %s\n", FIND_PATH, result);
+        exit(0);
+    }
 
-char **parseCommandline() {
-
-    char **argVec = malloc(sizeof(char*)*2);
-    argVec[0] = "/etc/";
-    argVec[1] = NULL;
-    return argVec;
+    char **args = list_to_array(argList);
+    if (args == NULL)
+        return NULL;
+    // note, argList is leaked as we proceed into the execve call
+    return args;
 
 }
 
 int main(int argc, char *argv[]) {
 
-    if (argc < 2)
+    if (argc < 3)
         usage(0);
 
     int opt, idx;
@@ -102,7 +106,7 @@ int main(int argc, char *argv[]) {
             case '?':
                 optionsError = TRUE;
                 break;
-            case 'm':
+            case 'c':
                 commandOnly = TRUE;
                 break;
         }
@@ -112,11 +116,12 @@ int main(int argc, char *argv[]) {
     if (optionsError)
         usage(1);
 
-    //char **argVec = parseCommandline();
-    //runFind(argVec);
-
-    printf("path expr: %s", argv[1]);
-    parseExpression(argv[2]);
+    char **argVec = parseExpression(argv[1], argv[2]);
+    if (argVec == NULL) {
+        printf("null expression\n");
+        exit(1);
+    }
+    runFind(argVec);
 
     return 0;
 

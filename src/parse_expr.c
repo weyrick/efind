@@ -30,37 +30,50 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
+#include "parse_expr.h"
 #include "scanner.h"
 #include "efind_parser.h"
-#include "parse_expr.h"
 
 void *ParseAlloc(void *(*mallocProc)(size_t));
+void ParseFree(
+  void *p,                    /* The parser to be deleted */
+  void (*freeProc)(void*)     /* Function used to reclaim memory */
+);
 void Parse(
   void *yyp,                  /* The parser */
   int yymajor,                /* The major token code number */
-  scanner_token *yyminor       /* The value for the token */
+  scanner_token *yyminor,      /* The value for the token */
+  list *argList
 );
 
-void parse_expr(char *s) {
+list* parse_expr(char *path, char *expr) {
 
     scanner_token token;
     scanner_state state;
 
     int stat;
 
+    list *argList = list_create();
+
+    // push the path as the first argument, as find expects
+    list_push(argList, strdup(path));
+
     void *pParser = (void*)ParseAlloc(malloc);
 
-    state.start = s;
+    state.start = expr;
 
-    printf("parse_expr: [%s]\n", s);
+    //printf("parse_expr: [%s]\n", expr);
     while(0 <= (stat = scan(&state,&token))) {
-        printf("token: [%i]\n", token.tokType);
-        Parse(pParser, token.tokType, &token);
+        //printf("token: [%i]\n", token.tokType);
+        Parse(pParser, token.tokType, &token, argList);
         state.end = state.start;
     }
 
-    Parse(pParser,0,0);
+    Parse(pParser,0,0,argList);
+    ParseFree(pParser, free);
+    return argList;
 
 }
 

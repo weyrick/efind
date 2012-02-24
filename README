@@ -1,1 +1,12 @@
-intuitive find interface
+intuitive find interface that uses english language expression:
+
+efind <path> <expr> <passthru options>
+
+expr examples:
+
+"owned by weyrick modified before [last thursday]"
+"grouped by (root or adm) and created > [3 months ago]"
+"not permissions g+w"
+"directory named foo*"
+"file inamed *someFile* created [today - two weeks]"
+
