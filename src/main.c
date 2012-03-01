@@ -32,7 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "parse_expr.h"
 
-#define FIND_PATH "/usr/bin/find"
 #define FALSE 0
 #define TRUE  1
 
@@ -42,7 +41,7 @@ struct option longopts[] = {
     {0, 0, 0, 0}
 };
 
-int commandOnly = TRUE;
+int commandOnly = FALSE;
 
 void version() {
     printf("efind v.9\n");
@@ -61,10 +60,18 @@ void usage(int retval) {
 void runFind(char *argVec[])
 {
 
-    char *findPath = FIND_PATH;
+#if 0
+    char *s = argVec[0];
+    int i=0;
+    while (s) {
+        printf("%i: %s\n", i++, s);
+        s = argVec[i];
+    }
+#endif
 
-    execve(findPath, argVec, NULL);
-    perror("execve failed");
+    if (execvp("find", argVec) == -1)
+        perror("exec failed");
+    exit(-1);
 
 }
 
@@ -74,14 +81,14 @@ char **parseExpression(char *path, char *expr) {
 
     if (commandOnly) {
         char *result = list_to_string(argList);
-        printf("%s %s\n", FIND_PATH, result);
+        printf("find %s\n", result);
         exit(0);
     }
 
     char **args = list_to_array(argList);
     if (args == NULL)
         return NULL;
-    // note, argList is leaked as we proceed into the execve call
+    // note, argList is leaked
     return args;
 
 }

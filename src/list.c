@@ -84,9 +84,10 @@ char *list_to_string(list *l) {
 
 char **list_to_array(list *l) {
     int size = 0, i = 0;
-    while (l) {
+    list *c = l;
+    while (c) {
         size++;
-        l = l->next;
+        c = c->next;
     }
     if (!size)
         return NULL;

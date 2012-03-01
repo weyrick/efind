@@ -57,6 +57,9 @@ list* parse_expr(char *path, char *expr) {
 
     list *argList = list_create();
 
+    // push find command
+    list_push(argList, strdup("find"));
+
     // push the path as the first argument, as find expects
     list_push(argList, strdup(path));
 
