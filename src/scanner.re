@@ -55,8 +55,13 @@ int scan(scanner_state *s, scanner_token *token) {
                 space = [ \t]+;
                 word = [a-zA-Z0-9]+;
 
-                "owned by" {
+                "owned by"|"owner" {
                     token->tokType = TOKEN_OWNEDBY;
+                    return 0;
+                }
+
+                "grouped by"|"group" {
+                    token->tokType = TOKEN_GROUPEDBY;
                     return 0;
                 }
 

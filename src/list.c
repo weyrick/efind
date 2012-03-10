@@ -55,6 +55,7 @@ void list_push(list *l, char *data) {
     }
     else {
         node = malloc(sizeof(list));
+        memset(node, 0, sizeof(list));
         end->next = node;
     }
     // note we *do not* copy, we take ownership!

@@ -55,3 +55,7 @@ expr ::= OWNEDBY WS WORD(B). {
     list_push(argList, B->data);
 }
 
+expr ::= GROUPEDBY WS WORD(B). {
+    list_push(argList, strdup("-group"));
+    list_push(argList, B->data);
+}

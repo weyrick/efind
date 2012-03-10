@@ -35,20 +35,26 @@ typedef struct {
 } test;
 
 test testList[] = {
-// expr, expected find commands
-{"owned by weyrick", ". -user weyrick"},
-//
-{0,0}
+    // expr, expected find commands
+    {"owned by weyrick",  "-user weyrick"},
+    {"owner weyrick",     "-user weyrick"},
+    {"grouped by weyrick", "-group weyrick"},
+    {"group weyrick", "-group weyrick"},
+    //
+    {0,0}
 };
 
 // return 0 on pass, non-0 on fail
 int runTest(char *expr, char *expect) {
 
+    // skip the prefix of "find . "
+    #define SKIP_LEN 7
+
     list *argList = parse_expr(".", expr);
     char *result = list_to_string(argList);
-    int cmp = strcmp(result, expect);
+    int cmp = strcmp(result+SKIP_LEN, expect);
     if (cmp)
-        printf("FAIL: [%s] != [%s]\n", result, expect);
+        printf("FAIL: [%s] != [%s]\n", result+SKIP_LEN, expect);
 
     list_free(argList);
     free(result);
