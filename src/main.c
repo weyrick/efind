@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <string.h>
 
+#include "list.h"
 #include "parse_expr.h"
 
 #define FALSE 0
@@ -80,7 +81,7 @@ char **parseExpression(char *path, char *expr) {
     list *argList = parse_expr(path, expr);
 
     if (commandOnly) {
-        char *result = list_to_string(argList);
+        char *result = list_to_str(argList);
         printf("find %s\n", result);
         exit(0);
     }

@@ -38,9 +38,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 %token_prefix TOKEN_
+%type WS {int}
 %token_type {scanner_token*}
 %default_type {scanner_token*}
-%type expr {scanner_token*}
 %syntax_error {
     printf("syntax error at: %s\n", TOKEN->data);
     exit(1);
@@ -48,14 +48,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %extra_argument {list* argList}
 
 %type goal {int}
-goal ::= expr.
+%type expr {list*}
+goal ::= expr(E). { list_push_list(argList, E); }
 
-expr ::= OWNEDBY WS WORD(B). {
-    list_push(argList, strdup("-user"));
-    list_push(argList, B->data);
+expr(RET) ::= expr(A) OR expr(B). {
+    RET = list_create();
+    list_push_list(RET, A);
+    list_push_str(RET, strdup("-o"));
+    list_push_list(RET, B);
 }
 
-expr ::= GROUPEDBY WS WORD(B). {
-    list_push(argList, strdup("-group"));
-    list_push(argList, B->data);
+expr(RET) ::= OWNEDBY WORD(B). {
+    RET = list_create();
+    list_push_str(RET, strdup("-user"));
+    list_push_str(RET, B->data);
+}
+
+expr(RET) ::= GROUPEDBY WORD(B). {
+    RET = list_create();
+    list_push_str(RET, strdup("-group"));
+    list_push_str(RET, B->data);
 }

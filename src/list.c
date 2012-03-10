@@ -38,7 +38,8 @@ list *list_create(void) {
     return head;
 }
 
-void list_push(list *l, char *data) {
+void list_push_str(list *l, char *data) {
+
     // find the end
     list *end = l;
     while (end) {
@@ -62,7 +63,20 @@ void list_push(list *l, char *data) {
     node->data = data;
 }
 
-char *list_to_string(list *l) {
+
+void list_push_list(list *l, list *r) {
+
+    list *cur = r;
+    while (cur) {
+        list_push_str(l, cur->data);
+        cur = cur->next;
+    }
+
+    list_free(r, 0);
+
+}
+
+char *list_to_str(list *l) {
     char *buf = malloc(COMBINE_BUF_SIZE);
     char *p = buf;
     int len = 0, total = 0;
@@ -102,12 +116,12 @@ char **list_to_array(list *l) {
     return result;
 }
 
-void list_free(list* l) {
+void list_free(list* l, int freeData) {
     list *n = l;
     list *t = 0;
     while (n) {
         t = n->next;
-        if (n->data)
+        if (freeData && n->data)
             free(n->data);
         free(n);
         n = t;

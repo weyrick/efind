@@ -53,7 +53,12 @@ int scan(scanner_state *s, scanner_token *token) {
 		re2c:yyfill:enable = 0;
 
                 space = [ \t]+;
-                word = [a-zA-Z0-9]+;
+                word = [-a-zA-Z0-9]+;
+
+                "or" {
+                    token->tokType = TOKEN_OR;
+                    return 0;
+                }
 
                 "owned by"|"owner" {
                     token->tokType = TOKEN_OWNEDBY;

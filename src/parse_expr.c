@@ -58,10 +58,10 @@ list* parse_expr(char *path, char *expr) {
     list *argList = list_create();
 
     // push find command
-    list_push(argList, strdup("find"));
+    list_push_str(argList, strdup("find"));
 
     // push the path as the first argument, as find expects
-    list_push(argList, strdup(path));
+    list_push_str(argList, strdup(path));
 
     void *pParser = (void*)ParseAlloc(malloc);
 
@@ -69,9 +69,11 @@ list* parse_expr(char *path, char *expr) {
 
     //printf("parse_expr: [%s]\n", expr);
     while(0 <= (stat = scan(&state,&token))) {
+        state.end = state.start;
+        if (token.tokType == TOKEN_WS)
+            continue;
         //printf("token: [%i]\n", token.tokType);
         Parse(pParser, token.tokType, &token, argList);
-        state.end = state.start;
     }
 
     Parse(pParser,0,0,argList);

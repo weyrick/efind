@@ -40,6 +40,7 @@ test testList[] = {
     {"owner weyrick",     "-user weyrick"},
     {"grouped by weyrick", "-group weyrick"},
     {"group weyrick", "-group weyrick"},
+    {"owner weyrick or group weyrick", "-user weyrick -o -group weyrick"},
     //
     {0,0}
 };
@@ -51,12 +52,14 @@ int runTest(char *expr, char *expect) {
     #define SKIP_LEN 7
 
     list *argList = parse_expr(".", expr);
-    char *result = list_to_string(argList);
+    char *result = list_to_str(argList);
     int cmp = strcmp(result+SKIP_LEN, expect);
     if (cmp)
         printf("FAIL: [%s] != [%s]\n", result+SKIP_LEN, expect);
+    else
+        printf("OK  : [%s] == [%s]\n", expr, expect);
 
-    list_free(argList);
+    list_free(argList, 1);
     free(result);
 
     return cmp;

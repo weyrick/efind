@@ -39,18 +39,23 @@ list *list_create(void);
 // push data onto the end of the given list
 // the list becomes the owner of the data, and frees
 // it in list_free
-void list_push(list *l, char *data);
+void list_push_str(list *l, char *data);
+
+// push all nodes in r onto the end of l
+// l becomes the new owner, r nodes are freed (but not their data, which
+// is now owned by l)
+void list_push_list(list *l, list *r);
 
 // combine all nodes into a single string
 // caller becomes owner of the string
-char *list_to_string(list *l);
+char *list_to_str(list *l);
 
 // convert the data from all nodes into a char *[]
 // terminates with a null entry
 // data is shared with the array (not copied)
 char **list_to_array(list *l);
 
-// free the list and all data it owns
-void list_free(list* l);
+// free the list nodes and optionall all data it owns
+void list_free(list* l, int freeData);
 
 #endif
