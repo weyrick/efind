@@ -54,24 +54,42 @@ int scan(scanner_state *s, scanner_token *token) {
 
                 space = [ \t]+;
                 word = [-a-zA-Z0-9]+;
+                int = [0-9]+;
 
-                "or" {
+                'or' {
                     token->tokType = TOKEN_OR;
                     return 0;
                 }
 
-                "owned by"|"owner" {
+                'size' {
+                    token->tokType = TOKEN_SIZE;
+                    return 0;
+                }
+
+                'byte''s'* {
+                    token->tokType = TOKEN_SIZEQUAL;
+                    token->opt = 'b';
+                    return 0;
+                }
+
+                'owned by'|'owner' {
                     token->tokType = TOKEN_OWNEDBY;
                     return 0;
                 }
 
-                "grouped by"|"group" {
+                'grouped by'|'group' {
                     token->tokType = TOKEN_GROUPEDBY;
                     return 0;
                 }
 
                 space {
                     token->tokType = TOKEN_WS;
+                    return 0;
+                }
+
+                int {
+                    token->tokType = TOKEN_INT;
+                    token->data = strndup(q, YYCURSOR - q);
                     return 0;
                 }
 

@@ -69,3 +69,16 @@ expr(RET) ::= GROUPEDBY WORD(B). {
     list_push_str(RET, strdup("-group"));
     list_push_str(RET, B->data);
 }
+
+expr(RET) ::= SIZE INT(N) SIZEQUAL(B). {
+    RET = list_create();
+    list_push_str(RET, strdup("-size"));
+    int numSize = strlen(N->data);
+    char *tmp = malloc(numSize+2);
+    memcpy(tmp, N->data, numSize);
+    tmp[numSize] = B->opt;
+    tmp[numSize+1] = 0;
+    list_push_str(RET, tmp);
+    free(N->data);
+}
+

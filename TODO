@@ -1,0 +1,28 @@
+- command line args, passthrus to find
+- no expression, passthrough
+- strtotime port
+
+- connecting words: with, having, has, files
+
+-amin,cmin,mmin
+-anewer,cnewer
+-atime,ctime,mtime
+-empty
+-executable
+-fstype
+-gid,uid
+-name,iname
+-wholename,iwholename
+-links
+-lname,ilname
+-newer
+-nogroup
+-nouser
+-path
+-perm
+-readable,writeable
+-regex
+-size
+-type
+-used
+

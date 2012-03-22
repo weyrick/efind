@@ -41,6 +41,7 @@ test testList[] = {
     {"grouped by weyrick", "-group weyrick"},
     {"group weyrick", "-group weyrick"},
     {"owner weyrick or group weyrick", "-user weyrick -o -group weyrick"},
+    {"size 10 bytes", "-size 10b"},
     //
     {0,0}
 };

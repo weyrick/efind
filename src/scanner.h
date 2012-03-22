@@ -47,6 +47,8 @@ typedef struct _scanner_token {
     int tokType;
     // data will be owned by argList
     char *data;
+    // optional extra char used by some tokens
+    char opt;
 	
 } scanner_token;
 
