@@ -61,6 +61,16 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
+                'and' {
+                    token->tokType = TOKEN_AND;
+                    return 0;
+                }
+
+                'not' {
+                    token->tokType = TOKEN_NOT;
+                    return 0;
+                }
+
                 'size' {
                     token->tokType = TOKEN_SIZE;
                     return 0;
@@ -68,7 +78,25 @@ int scan(scanner_state *s, scanner_token *token) {
 
                 'byte''s'* {
                     token->tokType = TOKEN_SIZEQUAL;
-                    token->opt = 'b';
+                    token->opt = 'c';
+                    return 0;
+                }
+
+                'kilobyte''s'*|'kb' {
+                    token->tokType = TOKEN_SIZEQUAL;
+                    token->opt = 'k';
+                    return 0;
+                }
+
+                'megabyte''s'*|'mb' {
+                    token->tokType = TOKEN_SIZEQUAL;
+                    token->opt = 'M';
+                    return 0;
+                }
+
+                'gigabyte''s'*|'gb' {
+                    token->tokType = TOKEN_SIZEQUAL;
+                    token->opt = 'G';
                     return 0;
                 }
 

@@ -41,7 +41,19 @@ test testList[] = {
     {"grouped by weyrick", "-group weyrick"},
     {"group weyrick", "-group weyrick"},
     {"owner weyrick or group weyrick", "-user weyrick -o -group weyrick"},
-    {"size 10 bytes", "-size 10b"},
+    {"size 10 BYTES", "-size 10c"},
+    {"size 10 bytes", "-size 10c"},
+    {"size 1 byte", "-size 1c"},
+    {"size 10 kilobytes", "-size 10k"},
+    {"size 10 kilobyte", "-size 10k"},
+    {"size 10 kb", "-size 10k"},
+    {"size 10 megabytes", "-size 10M"},
+    {"size 10 megabyte", "-size 10M"},
+    {"size 10 mb", "-size 10M"},
+    {"size 10 gigabytes", "-size 10G"},
+    {"size 10 gigabyte", "-size 10G"},
+    {"not owned by weyrick", "! -user weyrick"},
+    {"not owned by weyrick and not grouped by root", "! -user weyrick -a ! -group root"},
     //
     {0,0}
 };

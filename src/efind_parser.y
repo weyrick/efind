@@ -58,6 +58,19 @@ expr(RET) ::= expr(A) OR expr(B). {
     list_push_list(RET, B);
 }
 
+expr(RET) ::= expr(A) AND expr(B). {
+    RET = list_create();
+    list_push_list(RET, A);
+    list_push_str(RET, strdup("-a"));
+    list_push_list(RET, B);
+}
+
+expr(RET) ::= NOT expr(A). {
+    RET = list_create();
+    list_push_str(RET, strdup("!"));
+    list_push_list(RET, A);
+}
+
 expr(RET) ::= OWNEDBY WORD(B). {
     RET = list_create();
     list_push_str(RET, strdup("-user"));
