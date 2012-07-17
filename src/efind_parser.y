@@ -89,7 +89,14 @@ expr(RET) ::= GROUPEDBY WORD(B). {
 
 expr(RET) ::= NAMED WORD(B). {
     RET = list_create();
-    list_push_str(RET, strdup("-name"));
+    if (B->opt == 0)
+        list_push_str(RET, strdup("-name"));
+    else if (B->opt == 1)
+        list_push_str(RET, strdup("-iname"));
+    else if (B->opt == 2)
+        list_push_str(RET, strdup("-wholename"));
+    else if (B->opt == 3)
+        list_push_str(RET, strdup("-iwholename"));
     list_push_str(RET, B->data);
 }
 

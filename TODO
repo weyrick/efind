@@ -2,7 +2,7 @@
 - no expression, passthrough
 - strtotime port
 
-- connecting words: with, having, has, files
+- connecting words: with, having, has, files, are, is, a
 
 -amin,cmin,mmin
 -anewer,cnewer
@@ -11,8 +11,6 @@
 -executable
 -fstype
 -gid,uid
--name,iname
--wholename,iwholename
 -links
 -lname,ilname
 -newer

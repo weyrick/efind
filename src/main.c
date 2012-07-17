@@ -39,10 +39,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 struct option longopts[] = {
     {"version", FALSE, 0, 0},
     {"command-only", TRUE, 0, 'c'},
+    {"verbose", FALSE, 0, 'v'},
     {0, 0, 0, 0}
 };
 
 int commandOnly = FALSE;
+int verbose = FALSE;
 
 void version() {
     printf("efind v.9\n");
@@ -54,6 +56,7 @@ void usage(int retval) {
     printf("Usage:\n");
     printf("efind [path] [expression]\n");
     printf("\t-c\toutput find command only (do not run find)\n");
+    printf("\t-v\tverbose output\n");
     exit(retval);
 
 }
@@ -69,14 +72,18 @@ void runFind(char *path, list *argList)
     if (argVec == NULL)
         return;
 
-#if 0
-    char *s = argVec[0];
-    int i=0;
-    while (s) {
-        printf("%i: %s\n", i++, s);
-        s = argVec[i];
+    if (commandOnly) {
+        if (verbose) {
+            char *s = argVec[0];
+            int i=0;
+            while (s) {
+                printf("%i: %s\n", i++, s);
+                s = argVec[i];
+            }
+        }
+        printf("find %s\n", list_to_str(finalArgs));
+        exit(0);
     }
-#endif
 
     if (execvp("find", argVec) == -1)
         perror("exec failed");
@@ -91,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     int opt, idx;
     int optionsError = FALSE;
-    while ((opt = getopt_long(argc, argv, "c", longopts, &idx)) !=
+    while ((opt = getopt_long(argc, argv, "cv", longopts, &idx)) !=
            -1) {
         switch (opt) {
             case 0:
@@ -107,19 +114,22 @@ int main(int argc, char *argv[]) {
             case 'c':
                 commandOnly = TRUE;
                 break;
+            case 'v':
+                verbose = TRUE;
+                break;
         }
     }
 
     // check for options errors
-    if (optionsError)
+    if (optionsError || argc <= optind+1)
         usage(1);
 
-    list *argVec = parse_expr(argv[2]);
+    list *argVec = parse_expr(argv[optind+1]);
     if (argVec == NULL) {
         printf("null expression\n");
         exit(1);
     }
-    runFind(argv[1], argVec);
+    runFind(argv[optind], argVec);
 
     return 0;
 

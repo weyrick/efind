@@ -58,6 +58,12 @@ test testList[] = {
     {"named *bar*", "-name *bar*"},
     {"named bar??foo", "-name bar??foo"},
     {"name foo*", "-name foo*"},
+    {"inamed bar??foo", "-iname bar??foo"},
+    {"iname foo*", "-iname foo*"},
+    {"wholenamed bar??foo", "-wholename bar??foo"},
+    {"wholename foo/bar*", "-wholename foo/bar*"},
+    {"iwholenamed bar??foo", "-iwholename bar??foo"},
+    {"iwholename foo*", "-iwholename foo*"},
     //
     {0,0}
 };

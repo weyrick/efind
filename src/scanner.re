@@ -53,7 +53,7 @@ int scan(scanner_state *s, scanner_token *token) {
 		re2c:yyfill:enable = 0;
 
                 SPACE = [\r\n\t ]+;
-                WORD  = [-a-zA-Z0-9_*?.]+;
+                WORD  = [-a-zA-Z0-9_*?./]+;
                 INT   = [0-9]+;
                 ANY   = [^];
 
@@ -113,6 +113,25 @@ int scan(scanner_state *s, scanner_token *token) {
 
                 'name''d'* {
                     token->tokType = TOKEN_NAMED;
+                    token->opt = 0; // name
+                    return 0;
+                }
+
+                'iname''d'* {
+                    token->tokType = TOKEN_NAMED;
+                    token->opt = 1; // iname
+                    return 0;
+                }
+
+                'wholename''d'* {
+                    token->tokType = TOKEN_NAMED;
+                    token->opt = 2; // wholename
+                    return 0;
+                }
+
+                'iwholename''d'* {
+                    token->tokType = TOKEN_NAMED;
+                    token->opt = 3; // iwholename
                     return 0;
                 }
 
