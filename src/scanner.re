@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int scan(scanner_state *s, scanner_token *token) {
 
 	int r=SCANNER_RETCODE_IMPOSSIBLE;
-        char *q=s->start; //keep initial start
+    char *q=s->start; //keep initial start
 
 #define YYCTYPE char
 #define YYCURSOR (s->start)
@@ -52,9 +52,10 @@ int scan(scanner_state *s, scanner_token *token) {
 		re2c:indent:top = 2;
 		re2c:yyfill:enable = 0;
 
-                space = [ \t]+;
-                word = [-a-zA-Z0-9]+;
-                int = [0-9]+;
+                SPACE = [\r\n\t ]+;
+                WORD  = [-a-zA-Z0-9_*?.]+;
+                INT   = [0-9]+;
+                ANY   = [^];
 
                 'or' {
                     token->tokType = TOKEN_OR;
@@ -110,26 +111,32 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
-                space {
+                'name''d'* {
+                    token->tokType = TOKEN_NAMED;
+                    return 0;
+                }
+
+                SPACE {
                     token->tokType = TOKEN_WS;
                     return 0;
                 }
 
-                int {
+                INT {
                     token->tokType = TOKEN_INT;
                     token->data = strndup(q, YYCURSOR - q);
                     return 0;
                 }
 
-                word {
+                WORD {
                     token->tokType = TOKEN_WORD;
                     token->data = strndup(q, YYCURSOR - q);
                     return 0;
                 }
-		
-		"\000" { r = SCANNER_RETCODE_EOF; break; }
 
-		[^] { r = SCANNER_RETCODE_ERR; break; }
+                "\000" { r = SCANNER_RETCODE_EOF; break; }
+
+                ANY { r = SCANNER_RETCODE_ERR; break; }
+
 		*/
 
 	}

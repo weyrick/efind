@@ -58,8 +58,16 @@ void usage(int retval) {
 
 }
 
-void runFind(char *argVec[])
+void runFind(char *path, list *argList)
 {
+
+    list *finalArgs = list_create();
+    list_push_str(finalArgs, strdup(path));
+    list_push_list(finalArgs, argList);
+
+    char **argVec = list_to_array(finalArgs);
+    if (argVec == NULL)
+        return;
 
 #if 0
     char *s = argVec[0];
@@ -73,24 +81,6 @@ void runFind(char *argVec[])
     if (execvp("find", argVec) == -1)
         perror("exec failed");
     exit(-1);
-
-}
-
-char **parseExpression(char *path, char *expr) {
-
-    list *argList = parse_expr(path, expr);
-
-    if (commandOnly) {
-        char *result = list_to_str(argList);
-        printf("find %s\n", result);
-        exit(0);
-    }
-
-    char **args = list_to_array(argList);
-    if (args == NULL)
-        return NULL;
-    // note, argList is leaked
-    return args;
 
 }
 
@@ -124,12 +114,12 @@ int main(int argc, char *argv[]) {
     if (optionsError)
         usage(1);
 
-    char **argVec = parseExpression(argv[1], argv[2]);
+    list *argVec = parse_expr(argv[2]);
     if (argVec == NULL) {
         printf("null expression\n");
         exit(1);
     }
-    runFind(argVec);
+    runFind(argv[1], argVec);
 
     return 0;
 

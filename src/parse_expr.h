@@ -28,6 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define PARSE_EXPR_H
 
 #include "list.h"
-list * parse_expr(char *path, char *expr);
+list* parse_expr(char *expr);
 
 #endif

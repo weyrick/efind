@@ -48,7 +48,7 @@ void Parse(
   list *argList
 );
 
-list* parse_expr(char *path, char *expr) {
+list* parse_expr(char *expr) {
 
     scanner_token token;
     scanner_state state;
@@ -56,12 +56,6 @@ list* parse_expr(char *path, char *expr) {
     int stat;
 
     list *argList = list_create();
-
-    // push find command
-    list_push_str(argList, strdup("find"));
-
-    // push the path as the first argument, as find expects
-    list_push_str(argList, strdup(path));
 
     void *pParser = (void*)ParseAlloc(malloc);
 

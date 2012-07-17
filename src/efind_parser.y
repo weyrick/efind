@@ -47,6 +47,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 %extra_argument {list* argList}
 
+%left AND.
+%left OR.
+%right NOT.
+
 %type goal {int}
 %type expr {list*}
 goal ::= expr(E). { list_push_list(argList, E); }
@@ -80,6 +84,12 @@ expr(RET) ::= OWNEDBY WORD(B). {
 expr(RET) ::= GROUPEDBY WORD(B). {
     RET = list_create();
     list_push_str(RET, strdup("-group"));
+    list_push_str(RET, B->data);
+}
+
+expr(RET) ::= NAMED WORD(B). {
+    RET = list_create();
+    list_push_str(RET, strdup("-name"));
     list_push_str(RET, B->data);
 }
 

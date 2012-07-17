@@ -54,6 +54,10 @@ test testList[] = {
     {"size 10 gigabyte", "-size 10G"},
     {"not owned by weyrick", "! -user weyrick"},
     {"not owned by weyrick and not grouped by root", "! -user weyrick -a ! -group root"},
+    {"named foo*", "-name foo*"},
+    {"named *bar*", "-name *bar*"},
+    {"named bar??foo", "-name bar??foo"},
+    {"name foo*", "-name foo*"},
     //
     {0,0}
 };
@@ -61,14 +65,11 @@ test testList[] = {
 // return 0 on pass, non-0 on fail
 int runTest(char *expr, char *expect) {
 
-    // skip the prefix of "find . "
-    #define SKIP_LEN 7
-
-    list *argList = parse_expr(".", expr);
+    list *argList = parse_expr(expr);
     char *result = list_to_str(argList);
-    int cmp = strcmp(result+SKIP_LEN, expect);
+    int cmp = strcmp(result, expect);
     if (cmp)
-        printf("FAIL: [%s] != [%s]\n", result+SKIP_LEN, expect);
+        printf("FAIL: [%s] != [%s]\n", result, expect);
     else
         printf("OK  : [%s] == [%s]\n", expr, expect);
 
