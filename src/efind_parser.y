@@ -42,7 +42,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %token_type {scanner_token*}
 %default_type {scanner_token*}
 %syntax_error {
-    printf("syntax error at: %s\n", TOKEN->data);
+    if (TOKEN)
+        printf("syntax error at: [%i][%s][%i]\n", TOKEN->tokType, TOKEN->data, TOKEN->opt);
+    else
+        printf("missing expected token\n");
     exit(1);
 }
 %extra_argument {list* argList}
@@ -53,7 +56,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %type goal {int}
 %type expr {list*}
-goal ::= expr(E). { list_push_list(argList, E); }
+%type expr_list {list*}
+
+goal ::= expr_list(E). {
+    list_push_list(argList, E);
+}
+
+expr_list(RET) ::= expr(A). {
+    RET = A;
+}
+
+expr_list(RET) ::= expr_list(A) expr(B). {
+    list_push_list(A, B);
+    RET = A;
+}
 
 expr(RET) ::= expr(A) OR expr(B). {
     RET = list_create();
@@ -87,17 +103,32 @@ expr(RET) ::= GROUPEDBY WORD(B). {
     list_push_str(RET, B->data);
 }
 
-expr(RET) ::= NAMED WORD(B). {
+expr(RET) ::= NAMED(A) WORD(B). {
     RET = list_create();
-    if (B->opt == 0)
+    if (A->opt == 0)
         list_push_str(RET, strdup("-name"));
-    else if (B->opt == 1)
+    else if (A->opt == 1)
         list_push_str(RET, strdup("-iname"));
-    else if (B->opt == 2)
+    else if (A->opt == 2)
         list_push_str(RET, strdup("-wholename"));
-    else if (B->opt == 3)
+    else if (A->opt == 3)
         list_push_str(RET, strdup("-iwholename"));
     list_push_str(RET, B->data);
+}
+
+expr(RET) ::= FTYPE(B). {
+    RET = list_create();
+    list_push_str(RET, strdup("-type"));
+    if (B->opt == 0)      // directory
+        list_push_str(RET, strdup("d"));
+    else if (B->opt == 1) // pipe
+        list_push_str(RET, strdup("p"));
+    else if (B->opt == 2) // file
+        list_push_str(RET, strdup("f"));
+    else if (B->opt == 3) // link
+        list_push_str(RET, strdup("l"));
+    else if (B->opt == 4) // socket
+        list_push_str(RET, strdup("s"));
 }
 
 expr(RET) ::= SIZE INT(N) SIZEQUAL(B). {

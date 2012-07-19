@@ -36,6 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "scanner.h"
 #include "efind_parser.h"
 
+#define TOKEN_STACK 50
+
 void *ParseAlloc(void *(*mallocProc)(size_t));
 void ParseFree(
   void *p,                    /* The parser to be deleted */
@@ -48,9 +50,8 @@ void Parse(
   list *argList
 );
 
-list* parse_expr(char *expr) {
+list* parse_expr(char *expr, int verbose) {
 
-    scanner_token token;
     scanner_state state;
 
     int stat;
@@ -61,17 +62,28 @@ list* parse_expr(char *expr) {
 
     state.start = expr;
 
-    //printf("parse_expr: [%s]\n", expr);
-    while(0 <= (stat = scan(&state,&token))) {
+    if (verbose)
+        printf("parse_expr: [%s]\n", expr);
+
+    void* tokenStack = malloc(sizeof(scanner_token) * TOKEN_STACK);
+    memset(tokenStack, 0, sizeof(scanner_token) * TOKEN_STACK);
+    scanner_token *token = (scanner_token*)tokenStack;
+
+    while (0 <= (stat = scan(&state, token))) {
         state.end = state.start;
-        if (token.tokType == TOKEN_WS)
+        if (token->tokType == TOKEN_WS)
             continue;
-        //printf("token: [%i]\n", token.tokType);
-        Parse(pParser, token.tokType, &token, argList);
+        if (verbose)
+            printf("token: [%i][%s][%i][%x]\n", token->tokType, token->data, token->opt, token);
+        Parse(pParser, token->tokType, token, argList);
+        token += sizeof(scanner_token) % (sizeof(scanner_token) * TOKEN_STACK);
+        token->opt = 0;
+        token->data = 0;
     }
 
     Parse(pParser,0,0,argList);
     ParseFree(pParser, free);
+    free(tokenStack);
     return argList;
 
 }

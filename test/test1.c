@@ -64,6 +64,13 @@ test testList[] = {
     {"wholename foo/bar*", "-wholename foo/bar*"},
     {"iwholenamed bar??foo", "-iwholename bar??foo"},
     {"iwholename foo*", "-iwholename foo*"},
+    {"directory", "-type d"},
+    {"file", "-type f"},
+    {"pipe", "-type p"},
+    {"link", "-type l"},
+    {"socket", "-type s"},
+    {"directory named foo", "-type d -name foo"},
+    {"file named foo", "-type f -name foo"},
     //
     {0,0}
 };
@@ -71,7 +78,7 @@ test testList[] = {
 // return 0 on pass, non-0 on fail
 int runTest(char *expr, char *expect) {
 
-    list *argList = parse_expr(expr);
+    list *argList = parse_expr(expr, 0);
     char *result = list_to_str(argList);
     int cmp = strcmp(result, expect);
     if (cmp)

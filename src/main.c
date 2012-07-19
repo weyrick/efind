@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
     if (optionsError || argc <= optind+1)
         usage(1);
 
-    list *argVec = parse_expr(argv[optind+1]);
+    list *argVec = parse_expr(argv[optind+1], verbose);
     if (argVec == NULL) {
         printf("null expression\n");
         exit(1);

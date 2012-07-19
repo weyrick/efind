@@ -135,6 +135,36 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
+                'directory' {
+                    token->tokType = TOKEN_FTYPE;
+                    token->opt = 0; // directory
+                    return 0;
+                }
+
+                'pipe' {
+                    token->tokType = TOKEN_FTYPE;
+                    token->opt = 1; // pipe
+                    return 0;
+                }
+
+                'file' {
+                    token->tokType = TOKEN_FTYPE;
+                    token->opt = 2; // file
+                    return 0;
+                }
+
+                'link' {
+                    token->tokType = TOKEN_FTYPE;
+                    token->opt = 3; // link
+                    return 0;
+                }
+
+                'socket' {
+                    token->tokType = TOKEN_FTYPE;
+                    token->opt = 4; // socket
+                    return 0;
+                }
+
                 SPACE {
                     token->tokType = TOKEN_WS;
                     return 0;
