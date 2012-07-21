@@ -36,7 +36,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "scanner.h"
 #include "efind_parser.h"
 
+// total tokens we want to fit on the stack
 #define TOKEN_STACK 50
+// total in bytes of the token stack
+#define TOKEN_STACK_SIZE sizeof(scanner_token) * TOKEN_STACK
 
 void *ParseAlloc(void *(*mallocProc)(size_t));
 void ParseFree(
@@ -65,8 +68,8 @@ list* parse_expr(char *expr, int verbose) {
     if (verbose)
         printf("parse_expr: [%s]\n", expr);
 
-    void* tokenStack = malloc(sizeof(scanner_token) * TOKEN_STACK);
-    memset(tokenStack, 0, sizeof(scanner_token) * TOKEN_STACK);
+    void* tokenStack = malloc(TOKEN_STACK_SIZE);
+    memset(tokenStack, 0, TOKEN_STACK_SIZE);
     scanner_token *token = (scanner_token*)tokenStack;
 
     while (0 <= (stat = scan(&state, token))) {
@@ -76,7 +79,9 @@ list* parse_expr(char *expr, int verbose) {
         if (verbose)
             printf("token: [%i][%s][%i][%x]\n", token->tokType, token->data, token->opt, token);
         Parse(pParser, token->tokType, token, argList);
-        token += sizeof(scanner_token) % (sizeof(scanner_token) * TOKEN_STACK);
+        token += sizeof(scanner_token);
+        if (token >= tokenStack+TOKEN_STACK_SIZE)
+            token = tokenStack;
         token->opt = 0;
         token->data = 0;
     }

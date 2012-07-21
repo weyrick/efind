@@ -71,6 +71,8 @@ test testList[] = {
     {"socket", "-type s"},
     {"directory named foo", "-type d -name foo"},
     {"file named foo", "-type f -name foo"},
+    {"executable", "-executable"},
+    {"executable file named foo", "-executable -type f -name foo"},
     //
     {0,0}
 };
