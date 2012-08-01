@@ -131,6 +131,22 @@ expr(RET) ::= FTYPE(B). {
         list_push_str(RET, strdup("s"));
 }
 
+expr(RET) ::= UNARY(B). {
+    RET = list_create();
+    if (B->opt == 0)
+        list_push_str(RET, strdup("-executable"));
+    else if (B->opt == 1)
+        list_push_str(RET, strdup("-empty"));
+    else if (B->opt == 2)
+        list_push_str(RET, strdup("-nogroup"));
+    else if (B->opt == 3)
+        list_push_str(RET, strdup("-nouser"));
+    else if (B->opt == 4)
+        list_push_str(RET, strdup("-readable"));
+    else if (B->opt == 5)
+        list_push_str(RET, strdup("-writable"));
+}
+
 expr(RET) ::= SIZE INT(N) SIZEQUAL(B). {
     RET = list_create();
     list_push_str(RET, strdup("-size"));
@@ -141,5 +157,17 @@ expr(RET) ::= SIZE INT(N) SIZEQUAL(B). {
     tmp[numSize+1] = 0;
     list_push_str(RET, tmp);
     free(N->data);
+}
+
+expr(RET) ::= UID INT(N). {
+    RET = list_create();
+    list_push_str(RET, strdup("-uid"));
+    list_push_str(RET, N->data);
+}
+
+expr(RET) ::= GID INT(N). {
+    RET = list_create();
+    list_push_str(RET, strdup("-gid"));
+    list_push_str(RET, N->data);
 }
 

@@ -73,6 +73,16 @@ test testList[] = {
     {"file named foo", "-type f -name foo"},
     {"executable", "-executable"},
     {"executable file named foo", "-executable -type f -name foo"},
+    {"empty", "-empty"},
+    {"empty executable file named foo", "-empty -executable -type f -name foo"},
+    {"nogroup", "-nogroup"},
+    {"no group", "-nogroup"},
+    {"nouser", "-nouser"},
+    {"no user", "-nouser"},
+    {"readable", "-readable"},
+    {"writable", "-writable"},
+    {"gid 123", "-gid 123"},
+    {"uid 123", "-uid 123"},
     //
     {0,0}
 };

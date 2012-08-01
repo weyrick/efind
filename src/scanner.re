@@ -77,6 +77,16 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
+                'uid' {
+                    token->tokType = TOKEN_UID;
+                    return 0;
+                }
+
+                'gid' {
+                    token->tokType = TOKEN_GID;
+                    return 0;
+                }
+
                 'byte''s'* {
                     token->tokType = TOKEN_SIZEQUAL;
                     token->opt = 'c';
@@ -162,6 +172,42 @@ int scan(scanner_state *s, scanner_token *token) {
                 'socket' {
                     token->tokType = TOKEN_FTYPE;
                     token->opt = 4; // socket
+                    return 0;
+                }
+
+                'executable' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 0; // executable
+                    return 0;
+                }
+
+                'empty' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 1; // empty
+                    return 0;
+                }
+
+                'no'SPACE*'group' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 2; // nogroup
+                    return 0;
+                }
+
+                'no'SPACE*'user' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 3; // nouser
+                    return 0;
+                }
+
+                'readable' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 4; // readable
+                    return 0;
+                }
+
+                'writable' {
+                    token->tokType = TOKEN_UNARY;
+                    token->opt = 5; // writable
                     return 0;
                 }
 
