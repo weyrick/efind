@@ -83,6 +83,10 @@ test testList[] = {
     {"writable", "-writable"},
     {"gid 123", "-gid 123"},
     {"uid 123", "-uid 123"},
+    {"is a file", "-type f"},
+    {"any file with size 200 bytes", "-type f -size 200c"},
+    {"any directory not owned by weyrick", "-type d ! -user weyrick"},
+    {"a directory not grouped by weyrick and named foo", "-type d ! -group weyrick -a -name foo"},
     //
     {0,0}
 };

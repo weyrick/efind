@@ -211,6 +211,11 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
+                'with'|'having'|'has'|'are'|'is'|'a'|'any' {
+                    token->tokType = TOKEN_CONNECTOR;
+                    return 0;
+                }
+
                 SPACE {
                     token->tokType = TOKEN_WS;
                     return 0;

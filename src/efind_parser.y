@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %token_prefix TOKEN_
 %type WS {int}
+%type CONNECTOR {int}
 %token_type {scanner_token*}
 %default_type {scanner_token*}
 %syntax_error {
