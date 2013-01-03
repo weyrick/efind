@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "test_time.h"
 #include "parse_expr.h"
 
 typedef struct {
@@ -114,6 +115,7 @@ int main(int argc, char *argv[]) {
 
     int i, fail, pass;
     i = pass = fail = 0;
+
     while (testList[i].expr) {
         if (runTest(testList[i].expr, testList[i].expect))
             fail++;
@@ -123,6 +125,9 @@ int main(int argc, char *argv[]) {
     }
 
     printf("%i pass, %i fail\n", pass, fail);
+
+    if (do_test_time())
+        return 1;
 
     if (fail)
         return 1;
