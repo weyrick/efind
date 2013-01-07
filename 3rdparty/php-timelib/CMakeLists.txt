@@ -9,4 +9,6 @@ SET(TIME_SRC_LIST astro.c
              parse_iso_intervals.c
              interval.c)
 
+#add_definitions(-DDEBUG_PARSER)
+
 add_library(timelib ${TIME_SRC_LIST})
