@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2012-2013, Shannon Weyrick <weyrick@mozek.us>
+Copyright (c) 2012, Shannon Weyrick <weyrick@mozek.us>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -24,26 +24,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "strtotime.h"
-#include "stdio.h"
+#ifndef STRTOTIME_H
+#define STRTOTIME_H
 
-int do_test_time(void) {
+signed long strtotime(char *str);
 
-    signed long t, t2;
-
-    printf("** timelib test\n");
-    t = strtotime("today");
-    printf("[today]: %ld, ", t);
-    t2 = strtotime("today + 1 day");
-    printf("[today + 1 day] %ld: ", t2);
-
-    if (t2 == t + 3600*24) {
-        printf("OK\n");
-        return 0;
-    }
-    else {
-        printf("FAIL\n");
-        return 1;
-    }
-}
-
+#endif

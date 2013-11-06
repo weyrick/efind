@@ -73,6 +73,7 @@ SET(SRC_LIST src/main.c
              ${CMAKE_CURRENT_BINARY_DIR}/efind_parser.c
              src/list.c
              src/parse_expr.c
+             src/strtotime.c
              src/scanner.c)
 
 add_executable(efind ${SRC_LIST})
@@ -84,6 +85,7 @@ SET(TEST_SRC_LIST test/test1.c
              ${CMAKE_CURRENT_BINARY_DIR}/efind_parser.c
              src/list.c
              src/parse_expr.c
+             src/strtotime.c
              src/scanner.c)
 
 add_executable(efindtest ${TEST_SRC_LIST})

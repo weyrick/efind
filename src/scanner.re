@@ -211,8 +211,24 @@ int scan(scanner_state *s, scanner_token *token) {
                     return 0;
                 }
 
+                'created' {
+                    token->tokType = TOKEN_TIME;
+                    token->opt = 1;
+                    return 0;
+                }
+
                 'with'|'having'|'has'|'are'|'is'|'a'|'any' {
                     token->tokType = TOKEN_CONNECTOR;
+                    return 0;
+                }
+
+                '['[^\]]+']' {
+                    token->tokType = TOKEN_TIMESTR;
+                    token->data = strndup(q, YYCURSOR - q);
+                    // exclude the braces
+                    token->data[strlen(token->data)-1] = 0;
+                    *token->data++;
+                    //
                     return 0;
                 }
 

@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	#include "scanner.h"
         #include "efind_parser.h"
         #include "parse_expr.h"
+        #include "strtotime.h"
 
 }
 
@@ -172,3 +173,22 @@ expr(RET) ::= GID INT(N). {
     list_push_str(RET, N->data);
 }
 
+expr(RET) ::= TIME TIMESTR(S). {
+    //printf("timestr: %s\n", S->data);
+    signed long t;
+    RET = list_create();
+    switch (S->opt) {
+        case 1: // created
+        default:
+        list_push_str(RET, strdup("-ctime"));
+        t = strtotime(S->data);
+        if (t == -1) {
+            // XXX better error handling
+            printf("invalid timestr\n");
+        }
+        char buf[12];
+        snprintf(&buf, 12, "%li", t);
+        list_push_str(RET, strdup(&buf));
+    }
+
+}

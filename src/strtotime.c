@@ -24,26 +24,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "strtotime.h"
-#include "stdio.h"
+#include "timelib.h"
+#include "time.h"
+#include "assert.h"
 
-int do_test_time(void) {
+signed long strtotime(char *str) {
+    int   error1, error2;
+    struct timelib_error_container *error;
+    long  ts;
 
-    signed long t, t2;
+    timelib_time *t, *now;
+    timelib_tzinfo *tzi;
 
-    printf("** timelib test\n");
-    t = strtotime("today");
-    printf("[today]: %ld, ", t);
-    t2 = strtotime("today + 1 day");
-    printf("[today + 1 day] %ld: ", t2);
+    tzi = timelib_parse_tzfile("UTC", timelib_builtin_db());
+    assert(tzi);
 
-    if (t2 == t + 3600*24) {
-        printf("OK\n");
-        return 0;
-    }
-    else {
-        printf("FAIL\n");
-        return 1;
+    now = timelib_time_ctor();
+    now->tz_info = tzi;
+    now->zone_type = TIMELIB_ZONETYPE_ID;
+    timelib_unixtime2local(now, (timelib_sll) time(NULL));
+
+    t = timelib_strtotime(str,
+                         strlen(str),
+                         &error,
+                         timelib_builtin_db(),
+                         timelib_parse_tzfile);
+    error1 = error->error_count;
+    timelib_error_container_dtor(error);
+    timelib_fill_holes(t, now, TIMELIB_NO_CLONE);
+    timelib_update_ts(t, tzi);
+    ts = timelib_date_to_int(t, &error2);
+
+    timelib_time_dtor(now);
+    timelib_time_dtor(t);
+
+    if (error1 || error2) {
+        return -1;
+    } else {
+        return ts;
     }
 }
+
 

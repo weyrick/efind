@@ -88,6 +88,9 @@ test testList[] = {
     {"any file with size 200 bytes", "-type f -size 200c"},
     {"any directory not owned by weyrick", "-type d ! -user weyrick"},
     {"a directory not grouped by weyrick and named foo", "-type d ! -group weyrick -a -name foo"},
+    // timestr
+    {"created [today + 1 day]", "-ctime 138"},
+
     //
     {0,0}
 };
