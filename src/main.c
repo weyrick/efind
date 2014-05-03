@@ -72,7 +72,7 @@ void runFind(char *path, list *argList)
     if (argVec == NULL)
         return;
 
-    if (commandOnly) {
+    if (verbose || commandOnly) {
         if (verbose) {
             char *s = argVec[0];
             int i=0;
@@ -82,6 +82,9 @@ void runFind(char *path, list *argList)
             }
         }
         printf("find %s\n", list_to_str(finalArgs));
+    }
+
+    if (commandOnly) {
         exit(0);
     }
 
