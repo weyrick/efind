@@ -12,3 +12,5 @@ SET(TIME_SRC_LIST astro.c
 #add_definitions(-DDEBUG_PARSER)
 
 add_library(timelib ${TIME_SRC_LIST})
+target_link_libraries(timelib m) 
+
