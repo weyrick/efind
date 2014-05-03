@@ -2,6 +2,8 @@
 cmake_minimum_required(VERSION 2.8)
 project (efind)
 
+ADD_SUBDIRECTORY("3rdparty/php-timelib")
+
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules )
 
 MESSAGE( STATUS "PROJECT_SOURCE_DIR: " ${PROJECT_SOURCE_DIR} )
@@ -13,6 +15,7 @@ set(CMAKE_C_FLAGS "-Wall")
 include_directories (
                      ${CMAKE_CURRENT_BINARY_DIR}
                      ${CMAKE_CURRENT_SOURCE_DIR}/src
+                     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/php-timelib
                     )
 
 ##### LEXER #####
@@ -70,16 +73,22 @@ SET(SRC_LIST src/main.c
              ${CMAKE_CURRENT_BINARY_DIR}/efind_parser.c
              src/list.c
              src/parse_expr.c
+             src/strtotime.c
              src/scanner.c)
 
 add_executable(efind ${SRC_LIST})
 
+target_link_libraries(efind timelib)
+
 SET(TEST_SRC_LIST test/test1.c
+             test/test_time.c
              ${CMAKE_CURRENT_BINARY_DIR}/efind_parser.c
              src/list.c
              src/parse_expr.c
+             src/strtotime.c
              src/scanner.c)
 
 add_executable(efindtest ${TEST_SRC_LIST})
+target_link_libraries(efindtest timelib)
 
 add_custom_target(check ${CMAKE_CURRENT_BINARY_DIR}/efindtest)

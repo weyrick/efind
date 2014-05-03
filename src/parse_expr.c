@@ -74,7 +74,7 @@ list* parse_expr(char *expr, int verbose) {
 
     while (0 <= (stat = scan(&state, token))) {
         state.end = state.start;
-        if (token->tokType == TOKEN_WS)
+        if (token->tokType == TOKEN_WS || token->tokType == TOKEN_CONNECTOR)
             continue;
         if (verbose)
             printf("token: [%i][%s][%i][%x]\n", token->tokType, token->data, token->opt, token);
